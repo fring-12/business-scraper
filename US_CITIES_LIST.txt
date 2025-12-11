@@ -1,0 +1,284 @@
+# US CITIES FOR LEAD GENERATION
+# Copy and paste these into the Location field, one at a time
+# Each search at limit=50 gives you 50 unique businesses
+
+===============================================
+FLORIDA (Top 20 Cities)
+===============================================
+Miami, FL
+Tampa, FL
+Orlando, FL
+Jacksonville, FL
+Fort Lauderdale, FL
+West Palm Beach, FL
+St. Petersburg, FL
+Cape Coral, FL
+Port St. Lucie, FL
+Tallahassee, FL
+Naples, FL
+Sarasota, FL
+Fort Myers, FL
+Gainesville, FL
+Lakeland, FL
+Pensacola, FL
+Daytona Beach, FL
+Boca Raton, FL
+Melbourne, FL
+Kissimmee, FL
+
+===============================================
+CALIFORNIA (Top 20 Cities)
+===============================================
+Los Angeles, CA
+San Francisco, CA
+San Diego, CA
+San Jose, CA
+Sacramento, CA
+Fresno, CA
+Oakland, CA
+Long Beach, CA
+Anaheim, CA
+Riverside, CA
+Santa Ana, CA
+Irvine, CA
+Stockton, CA
+Bakersfield, CA
+Fremont, CA
+San Bernardino, CA
+Modesto, CA
+Oxnard, CA
+Fontana, CA
+Moreno Valley, CA
+
+===============================================
+TEXAS (Top 20 Cities)
+===============================================
+Houston, TX
+Dallas, TX
+Austin, TX
+San Antonio, TX
+Fort Worth, TX
+El Paso, TX
+Arlington, TX
+Corpus Christi, TX
+Plano, TX
+Lubbock, TX
+Laredo, TX
+Irving, TX
+Garland, TX
+Frisco, TX
+McKinney, TX
+Amarillo, TX
+Grand Prairie, TX
+Brownsville, TX
+Killeen, TX
+Pasadena, TX
+
+===============================================
+NEW YORK (Top 20 Cities)
+===============================================
+New York, NY
+Buffalo, NY
+Rochester, NY
+Syracuse, NY
+Albany, NY
+Yonkers, NY
+New Rochelle, NY
+White Plains, NY
+Utica, NY
+Binghamton, NY
+Schenectady, NY
+Niagara Falls, NY
+Troy, NY
+Ithaca, NY
+Poughkeepsie, NY
+Jamestown, NY
+Elmira, NY
+Watertown, NY
+Newburgh, NY
+Kingston, NY
+
+===============================================
+ILLINOIS (Top 20 Cities)
+===============================================
+Chicago, IL
+Aurora, IL
+Naperville, IL
+Joliet, IL
+Rockford, IL
+Springfield, IL
+Peoria, IL
+Elgin, IL
+Waukegan, IL
+Champaign, IL
+Bloomington, IL
+Decatur, IL
+Evanston, IL
+Des Plaines, IL
+Berwyn, IL
+Wheaton, IL
+Belleville, IL
+Moline, IL
+Palatine, IL
+Normal, IL
+
+===============================================
+PENNSYLVANIA (Top 20 Cities)
+===============================================
+Philadelphia, PA
+Pittsburgh, PA
+Allentown, PA
+Erie, PA
+Reading, PA
+Scranton, PA
+Bethlehem, PA
+Lancaster, PA
+Harrisburg, PA
+York, PA
+Altoona, PA
+Wilkes-Barre, PA
+Chester, PA
+Easton, PA
+Lebanon, PA
+Hazleton, PA
+New Castle, PA
+Johnstown, PA
+McKeesport, PA
+Hermitage, PA
+
+===============================================
+OHIO (Top 20 Cities)
+===============================================
+Columbus, OH
+Cleveland, OH
+Cincinnati, OH
+Toledo, OH
+Akron, OH
+Dayton, OH
+Canton, OH
+Youngstown, OH
+Parma, OH
+Lorain, OH
+Springfield, OH
+Hamilton, OH
+Kettering, OH
+Elyria, OH
+Lakewood, OH
+Cuyahoga Falls, OH
+Euclid, OH
+Middletown, OH
+Newark, OH
+Mansfield, OH
+
+===============================================
+GEORGIA (Top 20 Cities)
+===============================================
+Atlanta, GA
+Augusta, GA
+Columbus, GA
+Macon, GA
+Savannah, GA
+Athens, GA
+Sandy Springs, GA
+Roswell, GA
+Albany, GA
+Johns Creek, GA
+Warner Robins, GA
+Alpharetta, GA
+Marietta, GA
+Valdosta, GA
+Smyrna, GA
+Dunwoody, GA
+Rome, GA
+East Point, GA
+Milton, GA
+Gainesville, GA
+
+===============================================
+NORTH CAROLINA (Top 20 Cities)
+===============================================
+Charlotte, NC
+Raleigh, NC
+Greensboro, NC
+Durham, NC
+Winston-Salem, NC
+Fayetteville, NC
+Cary, NC
+Wilmington, NC
+High Point, NC
+Asheville, NC
+Concord, NC
+Greenville, NC
+Jacksonville, NC
+Chapel Hill, NC
+Rocky Mount, NC
+Burlington, NC
+Huntersville, NC
+Wilson, NC
+Kannapolis, NC
+Apex, NC
+
+===============================================
+MICHIGAN (Top 20 Cities)
+===============================================
+Detroit, MI
+Grand Rapids, MI
+Warren, MI
+Sterling Heights, MI
+Ann Arbor, MI
+Lansing, MI
+Flint, MI
+Dearborn, MI
+Livonia, MI
+Troy, MI
+Westland, MI
+Farmington Hills, MI
+Kalamazoo, MI
+Wyoming, MI
+Southfield, MI
+Rochester Hills, MI
+Taylor, MI
+Pontiac, MI
+St. Clair Shores, MI
+Royal Oak, MI
+
+===============================================
+ARIZONA (Top 20 Cities)
+===============================================
+Phoenix, AZ
+Tucson, AZ
+Mesa, AZ
+Chandler, AZ
+Scottsdale, AZ
+Glendale, AZ
+Gilbert, AZ
+Tempe, AZ
+Peoria, AZ
+Surprise, AZ
+Yuma, AZ
+Avondale, AZ
+Goodyear, AZ
+Flagstaff, AZ
+Buckeye, AZ
+Lake Havasu City, AZ
+Casa Grande, AZ
+Sierra Vista, AZ
+Maricopa, AZ
+Oro Valley, AZ
+
+===============================================
+QUICK TIP
+===============================================
+For 1000 leads:
+1. Set Results Limit to 50
+2. Pick any 20 cities from above
+3. Search same category for each city
+4. Export CSV after each search
+5. Combine all CSVs = 1000 unique leads!
+
+Example: 20 Florida cities × 50 plumbers each = 1000 Florida plumbers
+
+
+
+
+

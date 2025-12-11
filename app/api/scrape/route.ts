@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
 import { businessSearchSchema } from "@/lib/validators";
+import { GooglePlacesProvider } from "@/lib/providers/google-places";
+import { FoursquareProvider } from "@/lib/providers/foursquare";
+import { YelpProvider } from "@/lib/providers/yelp";
 import type { Business } from "@/types/business";
 
+// API Keys
+const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
+const FOURSQUARE_API_KEY = process.env.FOURSQUARE_API_KEY;
 const YELP_API_KEY = process.env.YELP_API_KEY;
-const YELP_API_URL = "https://api.yelp.com/v3/businesses/search";
 
 export async function POST(request: NextRequest) {
   try {
-    if (!YELP_API_KEY) {
-      return NextResponse.json(
-        { error: "API key not configured. Please add YELP_API_KEY to .env.local" },
-        { status: 500 }
-      );
-    }
-
     const body = await request.json();
     
     const validatedData = businessSearchSchema.parse({
@@ -22,50 +19,57 @@ export async function POST(request: NextRequest) {
       category: body.category,
       limit: body.limit || 20,
       radius: body.radius || 8000,
+      provider: body.provider || "google",
     });
 
-    const response = await axios.get(YELP_API_URL, {
-      headers: {
-        Authorization: `Bearer ${YELP_API_KEY}`,
-      },
-      params: {
-        location: validatedData.location,
-        term: validatedData.category,
-        limit: validatedData.limit,
-        radius: validatedData.radius,
-        sort_by: "best_match",
-      },
-    });
+    let businesses: Business[] = [];
 
-    if (!response.data || !response.data.businesses) {
-      return NextResponse.json(
-        { error: "No data received from API" },
-        { status: 500 }
-      );
+    // Select provider based on user choice
+    switch (validatedData.provider) {
+      case "google":
+        if (!GOOGLE_PLACES_API_KEY) {
+          return NextResponse.json(
+            { error: "Google Places API key not configured. Please add GOOGLE_PLACES_API_KEY to .env.local or try a different provider." },
+            { status: 500 }
+          );
+        }
+        const googleProvider = new GooglePlacesProvider(GOOGLE_PLACES_API_KEY);
+        businesses = await googleProvider.searchBusinesses(validatedData);
+        break;
+
+      case "foursquare":
+        if (!FOURSQUARE_API_KEY) {
+          return NextResponse.json(
+            { error: "Foursquare API key not configured. Please add FOURSQUARE_API_KEY to .env.local or try a different provider." },
+            { status: 500 }
+          );
+        }
+        const foursquareProvider = new FoursquareProvider(FOURSQUARE_API_KEY);
+        businesses = await foursquareProvider.searchBusinesses(validatedData);
+        break;
+
+      case "yelp":
+        if (!YELP_API_KEY) {
+          return NextResponse.json(
+            { error: "Yelp API key not configured. Please add YELP_API_KEY to .env.local or try a different provider." },
+            { status: 500 }
+          );
+        }
+        const yelpProvider = new YelpProvider(YELP_API_KEY);
+        businesses = await yelpProvider.searchBusinesses(validatedData);
+        break;
+
+      default:
+        return NextResponse.json(
+          { error: "Invalid provider selected." },
+          { status: 400 }
+        );
     }
-
-    const businesses: Business[] = response.data.businesses
-      .filter((business: any) => business.phone)
-      .map((business: any) => ({
-        id: business.id,
-        name: business.name,
-        phone: business.phone || business.display_phone || "N/A",
-        address: business.location?.address1 || "N/A",
-        city: business.location?.city || "N/A",
-        state: business.location?.state || "N/A",
-        zipCode: business.location?.zip_code || "N/A",
-        rating: business.rating || 0,
-        reviewCount: business.review_count || 0,
-        categories: business.categories?.map((cat: any) => cat.title) || [],
-        url: business.url || "#",
-        distance: business.distance
-          ? Math.round(business.distance * 0.000621371 * 100) / 100
-          : undefined,
-      }));
 
     return NextResponse.json({
       businesses,
       total: businesses.length,
+      provider: validatedData.provider,
     });
   } catch (error: any) {
     console.error("Scraping error:", error);
@@ -77,29 +81,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (error.response?.status === 400) {
+    // Provider-specific error handling
+    if (error.message) {
       return NextResponse.json(
-        { error: "Invalid search parameters. Please check your location and category." },
-        { status: 400 }
-      );
-    }
-
-    if (error.response?.status === 401) {
-      return NextResponse.json(
-        { error: "Invalid API key. Please check your Yelp API credentials." },
-        { status: 401 }
-      );
-    }
-
-    if (error.response?.status === 429) {
-      return NextResponse.json(
-        { error: "API rate limit exceeded. Please try again later." },
-        { status: 429 }
+        { error: error.message },
+        { status: error.response?.status || 500 }
       );
     }
 
     return NextResponse.json(
-      { error: "Failed to fetch business data. Please try again." },
+      { error: "Failed to fetch business data. Please try again or switch to a different provider." },
       { status: 500 }
     );
   }

@@ -20,34 +20,119 @@ export default function HomePage() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentProvider, setCurrentProvider] = useState<string>("");
+  const [searchProgress, setSearchProgress] = useState<{
+    current: number;
+    total: number;
+    currentCity: string;
+    currentCategory: string;
+  } | null>(null);
 
   const handleSearch = async (data: BusinessSearchInput) => {
     setIsLoading(true);
     setError(null);
+    setBusinesses([]);
 
     try {
-      const response = await axios.post("/api/scrape", data);
+      // Check if multiple cities and/or categories are selected
+      if (data.cities && data.cities.length > 0 && data.state) {
+        const allBusinesses: Business[] = [];
+        const categories = data.categories || (data.category ? [data.category] : []);
+        
+        if (categories.length === 0) {
+          setError("Please select at least one category");
+          setIsLoading(false);
+          return;
+        }
 
-      if (response.data.error) {
-        setError(response.data.error);
-        setBusinesses([]);
-        return;
-      }
+        // Calculate total combinations: cities × categories
+        const totalSearches = data.cities.length * categories.length;
+        let currentSearch = 0;
 
-      setBusinesses(response.data.businesses || []);
+        setSearchProgress({
+          current: 0,
+          total: totalSearches,
+          currentCity: "",
+          currentCategory: "",
+        });
 
-      if (response.data.businesses.length === 0) {
-        setError("No businesses found. Try adjusting your search parameters.");
+        // Loop through each city and category combination
+        for (const city of data.cities) {
+          for (const category of categories) {
+            currentSearch++;
+            const location = `${city}, ${data.state}`;
+
+            setSearchProgress({
+              current: currentSearch,
+              total: totalSearches,
+              currentCity: city,
+              currentCategory: category,
+            });
+
+            try {
+              const response = await axios.post("/api/scrape", {
+                ...data,
+                location,
+                category,
+              });
+
+              if (response.data.error) {
+                console.error(`Error searching ${city} - ${category}:`, response.data.error);
+                // Continue with next combination
+                continue;
+              }
+
+              if (response.data.businesses && response.data.businesses.length > 0) {
+                allBusinesses.push(...response.data.businesses);
+              }
+
+              setCurrentProvider(response.data.provider || data.provider || "");
+            } catch (comboError: any) {
+              console.error(`Error searching ${city} - ${category}:`, comboError);
+              // Continue with next combination
+              continue;
+            }
+          }
+        }
+
+        setSearchProgress(null);
+
+        if (allBusinesses.length === 0) {
+          setError(
+            "No businesses found in any of the selected combinations. Try adjusting your search parameters or switch to a different provider."
+          );
+        } else {
+          setBusinesses(allBusinesses);
+        }
+      } else {
+        // Single city search (backward compatibility)
+        const response = await axios.post("/api/scrape", data);
+
+        if (response.data.error) {
+          setError(response.data.error);
+          setBusinesses([]);
+          return;
+        }
+
+        setBusinesses(response.data.businesses || []);
+        setCurrentProvider(response.data.provider || data.provider || "");
+
+        if (response.data.businesses.length === 0) {
+          setError(
+            "No businesses found. Try adjusting your search parameters or switch to a different provider."
+          );
+        }
       }
     } catch (err: any) {
       console.error("Search error:", err);
-      
+
       const errorMessage =
         err.response?.data?.error ||
         "Failed to search businesses. Please check your API configuration and try again.";
-      
+
       setError(errorMessage);
       setBusinesses([]);
+      setSearchProgress(null);
     } finally {
       setIsLoading(false);
     }
@@ -66,9 +151,9 @@ export default function HomePage() {
               </h1>
             </div>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Generate leads for your AI voice assistant by finding legitimate home
-              service businesses in the US with verified phone numbers and contact
-              details.
+              Generate leads for your AI voice assistant by finding legitimate
+              home service businesses in the US with verified phone numbers and
+              contact details.
             </p>
           </div>
 
@@ -82,9 +167,41 @@ export default function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <BusinessSearchForm onSearch={handleSearch} isLoading={isLoading} />
+              <BusinessSearchForm
+                onSearch={handleSearch}
+                isLoading={isLoading}
+              />
             </CardContent>
           </Card>
+
+          {/* Search Progress */}
+          {searchProgress && (
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="pt-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-blue-900">
+                      Searching combinations... ({searchProgress.current}/{searchProgress.total})
+                    </span>
+                    <span className="text-blue-700">
+                      {Math.round((searchProgress.current / searchProgress.total) * 100)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${(searchProgress.current / searchProgress.total) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-blue-700">
+                    Currently searching: <strong>{searchProgress.currentCity}</strong> - <strong>{searchProgress.currentCategory}</strong>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Error Message */}
           {error && (
@@ -96,7 +213,7 @@ export default function HomePage() {
                   <p className="text-sm text-destructive/90">{error}</p>
                   {error.includes("API key") && (
                     <p className="text-sm text-muted-foreground mt-2">
-                      Make sure you have added your Yelp API key to the{" "}
+                      Make sure you have added your API key to the{" "}
                       <code className="bg-muted px-1 py-0.5 rounded">
                         .env.local
                       </code>{" "}
@@ -110,13 +227,20 @@ export default function HomePage() {
 
           {/* Export Button */}
           {businesses.length > 0 && (
-            <div className="flex justify-end">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-sm text-muted-foreground">
+                Data source:{" "}
+                <span className="font-medium capitalize">
+                  {currentProvider}
+                </span>
+              </div>
               <ExportButton businesses={businesses} disabled={isLoading} />
             </div>
           )}
 
           {/* Results */}
-          {(businesses.length > 0 || (!isLoading && businesses.length === 0 && !error)) && (
+          {(businesses.length > 0 ||
+            (!isLoading && businesses.length === 0 && !error)) && (
             <BusinessResults businesses={businesses} />
           )}
 
@@ -133,7 +257,9 @@ export default function HomePage() {
                     <li>Select a business category or enter a custom one</li>
                     <li>Adjust search parameters if needed</li>
                     <li>Click "Search Businesses" to get results</li>
-                    <li>Export results to CSV for your cold calling campaign</li>
+                    <li>
+                      Export results to CSV for your cold calling campaign
+                    </li>
                   </ol>
                 </div>
                 <div>
@@ -141,9 +267,9 @@ export default function HomePage() {
                     Data Source:
                   </h3>
                   <p>
-                    This app uses the Yelp Fusion API (free tier: 5,000 calls/day)
-                    to fetch legitimate business information. All data is sourced
-                    from publicly available business listings.
+                    This app uses the Yelp Fusion API (free tier: 5,000
+                    calls/day) to fetch legitimate business information. All
+                    data is sourced from publicly available business listings.
                   </p>
                 </div>
               </div>
@@ -154,4 +280,3 @@ export default function HomePage() {
     </main>
   );
 }
-

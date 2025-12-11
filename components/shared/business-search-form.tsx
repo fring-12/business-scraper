@@ -426,7 +426,7 @@ export const BusinessSearchForm = ({
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full md:w-auto"
+        className="w-full md:w-auto bg-slate-100 text-primary-foreground hover:bg-slate-200 border-slate-300"
         size="lg"
       >
         {isLoading ? (

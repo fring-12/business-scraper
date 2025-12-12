@@ -37,8 +37,9 @@ export default function HomePage() {
       // Check if multiple cities and/or categories are selected
       if (data.cities && data.cities.length > 0 && data.state) {
         const allBusinesses: Business[] = [];
-        const categories = data.categories || (data.category ? [data.category] : []);
-        
+        const categories =
+          data.categories || (data.category ? [data.category] : []);
+
         if (categories.length === 0) {
           setError("Please select at least one category");
           setIsLoading(false);
@@ -77,18 +78,27 @@ export default function HomePage() {
               });
 
               if (response.data.error) {
-                console.error(`Error searching ${city} - ${category}:`, response.data.error);
+                console.error(
+                  `Error searching ${city} - ${category}:`,
+                  response.data.error
+                );
                 // Continue with next combination
                 continue;
               }
 
-              if (response.data.businesses && response.data.businesses.length > 0) {
+              if (
+                response.data.businesses &&
+                response.data.businesses.length > 0
+              ) {
                 allBusinesses.push(...response.data.businesses);
               }
 
               setCurrentProvider(response.data.provider || data.provider || "");
             } catch (comboError: any) {
-              console.error(`Error searching ${city} - ${category}:`, comboError);
+              console.error(
+                `Error searching ${city} - ${category}:`,
+                comboError
+              );
               // Continue with next combination
               continue;
             }
@@ -181,22 +191,30 @@ export default function HomePage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium text-blue-900">
-                      Searching combinations... ({searchProgress.current}/{searchProgress.total})
+                      Searching combinations... ({searchProgress.current}/
+                      {searchProgress.total})
                     </span>
                     <span className="text-blue-700">
-                      {Math.round((searchProgress.current / searchProgress.total) * 100)}%
+                      {Math.round(
+                        (searchProgress.current / searchProgress.total) * 100
+                      )}
+                      %
                     </span>
                   </div>
                   <div className="w-full bg-blue-200 rounded-full h-2">
                     <div
                       className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                       style={{
-                        width: `${(searchProgress.current / searchProgress.total) * 100}%`,
+                        width: `${
+                          (searchProgress.current / searchProgress.total) * 100
+                        }%`,
                       }}
                     />
                   </div>
                   <p className="text-xs text-blue-700">
-                    Currently searching: <strong>{searchProgress.currentCity}</strong> - <strong>{searchProgress.currentCategory}</strong>
+                    Currently searching:{" "}
+                    <strong>{searchProgress.currentCity}</strong> -{" "}
+                    <strong>{searchProgress.currentCategory}</strong>
                   </p>
                 </div>
               </CardContent>

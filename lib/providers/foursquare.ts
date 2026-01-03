@@ -30,8 +30,8 @@ interface FoursquarePlace {
 }
 
 interface FoursquareSearchParams {
-  location: string;
-  category: string;
+  location?: string;
+  category?: string;
   limit: number;
   radius: number;
 }
@@ -46,6 +46,10 @@ export class FoursquareProvider {
 
   async searchBusinesses(params: FoursquareSearchParams): Promise<Business[]> {
     try {
+      if (!params.location || !params.category) {
+        throw new Error("Location and category are required for Foursquare search");
+      }
+
       const response = await axios.get(this.searchUrl, {
         headers: {
           Authorization: this.apiKey,

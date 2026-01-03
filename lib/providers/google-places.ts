@@ -25,8 +25,8 @@ interface GooglePlaceResult {
 }
 
 interface GooglePlacesSearchParams {
-  location: string;
-  category: string;
+  location?: string;
+  category?: string;
   limit: number;
   radius: number;
 }
@@ -42,6 +42,10 @@ export class GooglePlacesProvider {
 
   async searchBusinesses(params: GooglePlacesSearchParams): Promise<Business[]> {
     try {
+      if (!params.location || !params.category) {
+        throw new Error("Location and category are required for Google Places search");
+      }
+
       // Step 1: Text search to find businesses
       const searchResponse = await axios.get(this.textSearchUrl, {
         params: {

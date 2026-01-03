@@ -22,8 +22,8 @@ interface YelpBusiness {
 }
 
 interface YelpSearchParams {
-  location: string;
-  category: string;
+  location?: string;
+  category?: string;
   limit: number;
   radius: number;
 }
@@ -38,6 +38,10 @@ export class YelpProvider {
 
   async searchBusinesses(params: YelpSearchParams): Promise<Business[]> {
     try {
+      if (!params.location || !params.category) {
+        throw new Error("Location and category are required for Yelp search");
+      }
+
       const response = await axios.get(this.searchUrl, {
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
